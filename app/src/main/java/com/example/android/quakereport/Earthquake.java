@@ -1,25 +1,25 @@
 package com.example.android.quakereport;
 
-class Event {
-    private String mDate;
-    private float mMag;
+class Earthquake {
+    private long mDate;
+    private double mMag;
     private String mCity;
 
-    public Event(String Date, float Mag, String City) {
+    public Earthquake(long Date, double Mag, String City) {
         mDate = Date;
         mMag = Mag;
         mCity = City;
     }
 
-    public String getmDate() {
+    public long getmDate() {
         return mDate;
     }
 
-    public void setmDate(String Date) {
+    public void setmDate(long Date) {
         mDate = Date;
     }
 
-    public float getmMag() {
+    public double getmMag() {
         return mMag;
     }
 

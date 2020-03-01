@@ -10,11 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
-class EventAdapter extends ArrayAdapter<Event> {
+class EventAdapter extends ArrayAdapter<Earthquake> {
     Context mcontext;
     int prev_position = 0;
 
@@ -30,13 +28,13 @@ class EventAdapter extends ArrayAdapter<Event> {
         if (listview == null) {
             listview = LayoutInflater.from(mcontext).inflate(R.layout.item, parent, false);
         }
-        Event curentEvent = getItem(position);
+        Earthquake curentEarthquake = getItem(position);
         TextView mag_text = (TextView) listview.findViewById(R.id.mag_text);
-        mag_text.setText(Float.toString(curentEvent.getmMag()));
+        mag_text.setText(Double.toString(curentEarthquake.getmMag()));
         TextView city_text = (TextView) listview.findViewById(R.id.city_text);
-        city_text.setText(curentEvent.getmCity());
+        city_text.setText(curentEarthquake.getmCity());
         TextView date_text = (TextView) listview.findViewById(R.id.date_text);
-        date_text.setText(curentEvent.getmDate());
+        date_text.setText(Long.toString(curentEarthquake.getmDate()));
         return listview;
     }
 }
