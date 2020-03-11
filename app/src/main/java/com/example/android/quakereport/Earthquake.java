@@ -4,11 +4,13 @@ class Earthquake {
     private long mDate;
     private double mMag;
     private String mCity;
+    private String mURL;
 
-    public Earthquake(long Date, double Mag, String City) {
+    public Earthquake(long Date, double Mag, String City, String url) {
         mDate = Date;
         mMag = Mag;
         mCity = City;
+        mURL = url;
     }
 
     public long getmDate() {
@@ -33,5 +35,12 @@ class Earthquake {
 
     public void setmCity(String City) {
         mCity = City;
+    }
+
+    public void setmURL(String mURL) {
+        this.mURL = mURL;
+    }
+    public String getmURL() {
+        return mURL;
     }
 }
