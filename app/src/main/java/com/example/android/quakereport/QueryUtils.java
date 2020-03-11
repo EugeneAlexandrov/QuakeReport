@@ -27,7 +27,7 @@ public final class QueryUtils {
      */
 
     /** Tag for the log messages */
-    public static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    public static final String LOG_TAG = "QuakeReport";
     private QueryUtils() {
     }
 
@@ -36,6 +36,7 @@ public final class QueryUtils {
      */
     public static List<Earthquake> fetchEarthquakeData(String requestUrl) {
         // Create URL object
+        Log.d(LOG_TAG,"TEST: fetchEarthQuakeData");
         URL url = createUrl(requestUrl);
 
         // Perform HTTP request to the URL and receive a JSON response back
