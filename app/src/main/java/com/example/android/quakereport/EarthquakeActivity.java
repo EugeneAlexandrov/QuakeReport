@@ -33,11 +33,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Earthquake>> , SwipeRefreshLayout.OnRefreshListener {
 
     private static final String LOG_TAG = "QuakeReport";
     private static final String USGS_RESPONSE = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=10";
@@ -46,6 +47,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     public TextView emptystate;
     public ProgressBar progress;
     private Context context;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onDestroy() {
@@ -85,11 +87,13 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // Get details on the currently active default data network
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnected()) {
-        getLoaderManager().initLoader(LOADER_ID, null, (android.app.LoaderManager.LoaderCallbacks<Object>) this);
+        getSupportLoaderManager().initLoader(LOADER_ID, null,  this);
         } else {
             progress.setVisibility(View.GONE);
             emptystate.setText("No internet connection");
         }
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -123,5 +127,11 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     public void onLoaderReset(@NonNull Loader<List<Earthquake>> loader) {
         Log.d(LOG_TAG, "TEST: Loader прервал загрузку");
         mAdapter.clear();
+    }
+
+    @Override
+    public void onRefresh() {
+        getSupportLoaderManager().restartLoader(LOADER_ID, null,  this);
+        mSwipeRefreshLayout.setRefreshing (false);
     }
 }
