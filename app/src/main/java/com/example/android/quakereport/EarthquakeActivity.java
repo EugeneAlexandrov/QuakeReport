@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,13 +43,19 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     private static final String USGS_RESPONSE = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=10";
     private static final int LOADER_ID = 1;
     private EventAdapter mAdapter;
-    private TextView emptystate;
-    private ProgressBar progress;
+    public TextView emptystate;
+    public ProgressBar progress;
     private Context context;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "TEST: onDestroy вызван");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "TEST: onCreate start");
+        Log.d(LOG_TAG, "TEST: onCreate вызван");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
         progress = (ProgressBar) findViewById(R.id.progress);
@@ -74,30 +79,36 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
             }
         });
         // Start the AsyncTask to fetch the earthquake data
-        Log.d(LOG_TAG, "TEST: initLoader");
+        Log.d(LOG_TAG, "TEST: вызов или создание нового Loader");
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // Get details on the currently active default data network
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnected()) {
-            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        getLoaderManager().initLoader(LOADER_ID, null, (android.app.LoaderManager.LoaderCallbacks<Object>) this);
         } else {
             progress.setVisibility(View.GONE);
             emptystate.setText("No internet connection");
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TAG, "TEST: onStart вызван");
+    }
+
     @NonNull
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int id, @Nullable Bundle args) {
-        Log.d(LOG_TAG, "TEST: onCreateLoader start");
+        Log.d(LOG_TAG, "TEST: создание Loader");
         return new EarthquakeLoader(EarthquakeActivity.this, USGS_RESPONSE);
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Earthquake>> loader, List<Earthquake> data) {
         // Clear the adapter of previous earthquake data
-        Log.d(LOG_TAG, "TEST: onFinishedLoader start");
+        Log.d(LOG_TAG, "TEST: Loader закончил загрузку");
         emptystate.setText(R.string.no_earthquakes);
         progress.setVisibility(View.GONE);
         mAdapter.clear();
@@ -110,7 +121,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<Earthquake>> loader) {
-        Log.d(LOG_TAG, "TEST: onLoaderReset start");
+        Log.d(LOG_TAG, "TEST: Loader прервал загрузку");
         mAdapter.clear();
     }
 }
